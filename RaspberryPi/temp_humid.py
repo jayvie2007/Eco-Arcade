@@ -28,14 +28,31 @@ device_two.contrast(100)
 try:
     temperature = dht.temperature
     temp = ("T:{:.1f}".format(temperature))
-
     humidity = dht.humidity
     humid = f"H:{humidity}%"
 
+    #Check if humid and temp catches value else 0
+    if not humid:
+        humidty = 0
+        humid = ("H:0%")
+    if not temp:
+        temperature = 0
+        temp = ("T:0")
+
+    #First Count
     with canvas(virtual) as draw:
         text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
     with canvas(virtual_two) as draw:
         text(draw, (4, 1), humid, fill="white", font=proportional(LCD_FONT))
+    db().child("Weather").update({"temperature":temperature,"humidity":humidity})
+
+    time.sleep(5)
+    #Second Count
+    with canvas(virtual) as draw:
+        text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
+    with canvas(virtual_two) as draw:
+        text(draw, (4, 1), humid, fill="white", font=proportional(LCD_FONT))
+    db().child("Weather").update({"temperature":temperature,"humidity":humidity})
 
 except RuntimeError as e:
     print("Reading from DHT failure: ", e.args)
