@@ -25,6 +25,19 @@ def close_motor(delay):
     GPIO.output(LinearClose, GPIO.HIGH)
     time.sleep(delay)
 
+while True:
+    try:
+        check_starter = db().child("LinearOne").get()
+        existing_starter = check_starter["starter"]
+    except:
+        db().child("LinearOne").update({"starter":False})
+        check_starter = db().child("LinearOne").get()
+        existing_starter = check_starter["starter"]    
+
+    if existing_starter:
+        open_motor(5000)
+        db().child("LinearOne").update({"starter":False})
+        close_motor(5000)
 
 
 
