@@ -83,16 +83,16 @@ def stepper_rotate_left():
         if initialize_count == step_count - 1:
             cleanup()
 
-try:
-    check_starter = db().child("Stepper").get()
-    existing_starter = check_starter["starter"]
-except:
-    db().child("Stepper").update({"starter":False})
-    check_starter = db().child("Stepper").get()
-    existing_starter = check_starter["starter"]
-
 while True:    
-    if existing_starter:
-        stepper_rotate_right()
+    try:
+        check_starter = db().child("Stepper").get()
+        existing_starter = check_starter["starter"]
+    except:
         db().child("Stepper").update({"starter":False})
+        check_starter = db().child("Stepper").get()
+        existing_starter = check_starter["starter"]
+        
+        if existing_starter:
+            stepper_rotate_right()
+            db().child("Stepper").update({"starter":False})
 
