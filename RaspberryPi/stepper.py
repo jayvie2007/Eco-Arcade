@@ -5,11 +5,10 @@ import board
 import time
 
 #STEPPER
-out1 = 17
-out2 = 18
-#out2 = 12
-out3 = 27
-out4 = 22
+out1 = 17 #PIN=11 LEFT
+out2 = 18 #PIN=12 RIGHT
+out3 = 27 #PIN=13 LEFT
+out4 = 22 #PIN=15 LEFT
 step_sleep = 0.002
 step_count = 1000
 initialize_count = 0
