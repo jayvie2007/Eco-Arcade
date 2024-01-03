@@ -12,14 +12,17 @@ import adafruit_dht
 import board
 import time
 
-dht = adafruit_dht.DHT22(board.D21)
+#PIN=40 RIGHT
+dht = adafruit_dht.DHT22(board.D21) 
 dht = adafruit_dht.DHT22(board.D21, use_pulseio=False)
 
+#PIN DIN=19 LEFT CLK=23 LEFT CS=24 RIGHT
 serial = spi(port=0, device=0, gpio=noop())
 device = max7219(serial, width=32, height=8, block_orientation=-90, blocks_arranged_in_reverse_order=False)
 device.contrast(100)
 virtual = viewport(device, width=32, height=16)
 
+#PIN DIN=19 LEFT CLK=23 LEFT CS=26 RIGHT
 serial_two = spi(port=0, device=1, gpio=noop())
 device_two = max7219(serial_two, width=32, height=8, block_orientation=-90,blocks_arranged_in_reverse_order=False)
 virtual_two = viewport(device_two, width=32, height=16)
