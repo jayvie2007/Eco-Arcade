@@ -7,8 +7,8 @@ import time
 import board
 import RPi.GPIO as GPIO
 
-LinearOpen = 16 #violet GPIO
-LinearClose = 20 #blue GPIO
+LinearOpen = 16 #PIN=36 RIGHT
+LinearClose = 20 #PIN=38 RIGHT
 
 GPIO.setup(LinearOpen, GPIO.OUT)
 GPIO.setup(LinearClose, GPIO.OUT)
