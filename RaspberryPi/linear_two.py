@@ -27,11 +27,11 @@ def close_motor(delay):
 
 while True:
     try:
-        check_starter = db().child("LinearTwo").get()
+        check_starter = db().child("LinearTwo").get().val()
         existing_starter = check_starter["starter"]
     except:
         db().child("LinearTwo").update({"starter":False})
-        check_starter = db().child("LinearTwo").get()
+        check_starter = db().child("LinearTwo").get().val()
         existing_starter = check_starter["starter"]    
 
     if existing_starter:
