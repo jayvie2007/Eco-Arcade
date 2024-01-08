@@ -35,7 +35,7 @@ while True:
         existing_starter = check_starter["starter"]    
 
     if existing_starter:
-        open_motor(5000)
+        open_motor(10)
         db().child("LinearTwo").update({"starter":False})
-        close_motor(5000)
+        close_motor(10)
 
