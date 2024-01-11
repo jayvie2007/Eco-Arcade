@@ -29,14 +29,8 @@ long durationPaper;
 int distancePaper;
 int binLevelPaper;
 
-//Setting up Inductive Proximity Sensor
-const int inductiveSensorPin = D0;
-
-//Setting up Capacitive Proximity for Paper Sensor
-const int capacitiveSensorPinPaper = D7;
-
 //Setting up Capacitive Proximity for Plastic Sensor
-const int capacitiveSensorPinPlastic = 10;
+const int infaredSensorPinPlastic = D7;
 
 void setup() {
     Serial.begin(115200);
@@ -60,56 +54,26 @@ void setup() {
     pinMode(echoPinCan, INPUT);
     pinMode(trigPinPaper, OUTPUT);
     pinMode(echoPinPaper, INPUT);
-    pinMode(inductiveSensorPin, INPUT);
-    pinMode(capacitiveSensorPinPaper, INPUT);
-    pinMode(capacitiveSensorPinPlastic, INPUT);
+    pinMode(infaredSensorPinPlastic, INPUT);
 }
 
 void loop() {
-
-    // Get Readings from Inductive Sensor
-    int inductiveSensorValue = digitalRead(inductiveSensorPin);
-
-    // Get Current Can Count From Firebase
-    int can_count = Firebase.getInt("Bin/can"); 
-    if(inductiveSensorValue==LOW){ 
-        Serial.println("No Metal Detected");
-    }
-    else{
-        Firebase.setInt("Bin/can", can_count + 1);
-        Serial.println("Metal Detected");
-    delay(500);
-    }
-
-    // Get Readings From Capacitive Sensor Paper
-    int capacitiveSensorPaperValue = digitalRead(capacitiveSensorPinPaper);
-
-    // Get Current Paper Count From Firebase
-    int paper_count = Firebase.getInt("Bin/paper"); 
-    if(capacitiveSensorPaperValue == HIGH) {
-        Firebase.setInt("Bin/paper", paper_count + 1);
-        Firebase.setInt("LinearOne/starter", true);
-        Serial.print("Paper Detected"); 
-    }
-    else{
-        Serial.println("No Paper Detected");
-    }
-    delay(500);
-
     // Get Readings From Capacitive Sensor Plastic
-    int capacitiveSensorPlasticValue = digitalRead(capacitiveSensorPinPlastic);
+    int infaredSensorPlasticValue = digitalRead(infaredSensorPinPlastic);
 
     // Get Current Paper Count From Firebase
-    int plastic_count = Firebase.getInt("Bin/plastic"); 
-    if(capacitiveSensorPlasticValue == HIGH) {
-        Firebase.setInt("Bin/plastic", plastic_count + 1);
+    int plastic_count = Firebase.getInt("BottleCount/plastic"); 
+    if(infaredSensorPlasticValue == LOW) {
+        Firebase.setInt("BottleCount/plastic", plastic_count + 1);
         Firebase.setInt("LinearTwo/starter", true);
-        Serial.print("Plastic Detected"); 
+        Firebase.setInt("Stepper/plastic", true);
+        Serial.println("Plastic Detected");
+        delay(5000);
+        
     }
     else{
         Serial.println("No Plastic Detected");
     }
-    delay(500);
 
     // Bin Level Monitoring Sensors for Plastic
     digitalWrite(trigPinPlastic, LOW);
@@ -121,7 +85,6 @@ void loop() {
     distancePlastic = durationPlastic * 0.034 / 2;
     Serial.print("Distance Plastic: ");
     Serial.println(distancePlastic);
-    delay(2000);
 
     // Bin Level Monitoring Sensors for Can
     digitalWrite(trigPinCan, LOW);
@@ -133,7 +96,6 @@ void loop() {
     distanceCan = durationCan * 0.034 / 2;
     Serial.print("Distance Can: ");
     Serial.println(distanceCan);
-    delay(2000);
 
     // Bin Level Monitoring Sensors for Paper
     digitalWrite(trigPinPaper, LOW);
@@ -145,7 +107,6 @@ void loop() {
     distancePaper = durationPaper * 0.034 / 2;
     Serial.print("Distance Paper: ");
     Serial.println(distancePaper);
-    delay(2000);
 
     // BinPlastic
     if (distancePlastic <= 8) {
@@ -190,13 +151,5 @@ void loop() {
         Serial.println(Firebase.error());  
         return;
     }
-
-    //Display Value for Readings
-    Serial.print("Plasic Level: ");
-    Serial.println(Firebase.getFloat("Bin/plastic"));
-    Serial.print("Can Level: ");
-    Serial.println(Firebase.getFloat("Bin/can"));
-    Serial.print("Paper Level: ");
-    Serial.println(Firebase.getFloat("Bin/paper"));
-    delay(1000);
+    delay(500);
 }
