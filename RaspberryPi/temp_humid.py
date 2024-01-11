@@ -5,7 +5,7 @@ from luma.core.render import canvas
 from luma.core.virtual import viewport
 from luma.led_matrix.device import max7219
 from luma.core.legacy import text, show_message
-from luma.core.legacy.font import proportional, CP437_FONT, LCD_FONT,TINY_FONT, SINCL
+from luma.core.legacy.font import proportional, CP437_FONT, LCD_FONT,TINY_FONT
 
 import RPi.GPIO as GPIO
 import adafruit_dht
@@ -33,29 +33,29 @@ while True:
         temperature = dht.temperature
         temp = ("T:{:.1f}".format(temperature))
         humidity = dht.humidity
-        humid = f"H:{humidity}%"
+        humid = f"H:{humidity}"
 
         #Check if humid and temp catches value else 0
         if not humid:
             humidty = 0
-            humid = ("H:0%")
+            humid = ("H:0")
         if not temp:
             temperature = 0
             temp = ("T:0")
 
         #First Count
         with canvas(virtual) as draw:
-            text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
+            text(draw, (0, 1), "Throw", fill="white", font=proportional(LCD_FONT))
         with canvas(virtual_two) as draw:
-            text(draw, (4, 1), humid, fill="white", font=proportional(LCD_FONT))
+            text(draw, (0, 1), humid, fill="white", font=proportional(LCD_FONT))
         db().child("Weather").update({"temperature":temperature,"humidity":humidity})
 
-        time.sleep(5)
+        time.sleep(0.5)
         #Second Count
         with canvas(virtual) as draw:
             text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
         with canvas(virtual_two) as draw:
-            text(draw, (4, 1), humid, fill="white", font=proportional(LCD_FONT))
+            text(draw, (0, 1), humid, fill="white", font=proportional(LCD_FONT))
         db().child("Weather").update({"temperature":temperature,"humidity":humidity})
 
     except RuntimeError as e:

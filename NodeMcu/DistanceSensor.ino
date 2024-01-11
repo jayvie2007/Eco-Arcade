@@ -65,8 +65,8 @@ void loop() {
     int plastic_count = Firebase.getInt("BottleCount/plastic"); 
     if(infaredSensorPlasticValue == LOW) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
-        Firebase.setInt("LinearTwo/starter", true);
-        Firebase.setInt("Stepper/plastic", true);
+        Firebase.setBool("LinearTwo/starter", true);
+        Firebase.setBool("Stepper/plastic", true);
         Serial.println("Plastic Detected");
         delay(5000);
         
