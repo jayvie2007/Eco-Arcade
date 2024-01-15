@@ -8,6 +8,9 @@
 #define WIFI_SSID "OPPO A92"
 #define WIFI_PASSWORD "11111111"
 
+// #define WIFI_SSID "ECO WIFI"
+// #define WIFI_PASSWORD "11111111"
+
 //Setting up PlasticBin Ultrasonic Sensor
 const int echoPinPlastic = 5; //jumper D1
 const int trigPinPlastic = 4; //jumper D2
@@ -29,8 +32,8 @@ long durationPaper;
 int distancePaper;
 int binLevelPaper;
 
-//Setting up Capacitive Proximity for Plastic Sensor
-const int infaredSensorPinPlastic = D7;
+//Setting up Infared Sensor for Paper Sensor
+const int infaredSensorPinPaper = D7;
 
 void setup() {
     Serial.begin(115200);
@@ -54,25 +57,24 @@ void setup() {
     pinMode(echoPinCan, INPUT);
     pinMode(trigPinPaper, OUTPUT);
     pinMode(echoPinPaper, INPUT);
-    pinMode(infaredSensorPinPlastic, INPUT);
+    pinMode(infaredSensorPinPaper, INPUT);
 }
 
 void loop() {
-    // Get Readings From Capacitive Sensor Plastic
-    int infaredSensorPlasticValue = digitalRead(infaredSensorPinPlastic);
+    // Get Readings From Infared Sensor Paper
+    int infaredSensorPaperValue = digitalRead(infaredSensorPinPaper);
 
     // Get Current Paper Count From Firebase
-    int plastic_count = Firebase.getInt("BottleCount/plastic"); 
-    if(infaredSensorPlasticValue == LOW) {
-        Firebase.setInt("BottleCount/plastic", plastic_count + 1);
-        Firebase.setBool("LinearTwo/starter", true);
-        Firebase.setBool("Stepper/plastic", true);
-        Serial.println("Plastic Detected");
+    int paper_count = Firebase.getInt("BottleCount/paper"); 
+    if(infaredSensorPaperValue == LOW) {
+        Firebase.setInt("BottleCount/paper", paper_count + 1);
+        Firebase.setInt("Stepper/paper", true);
+        Serial.println("Paper Detected");
         delay(5000);
         
     }
     else{
-        Serial.println("No Plastic Detected");
+        Serial.println("No Paper Detected");
     }
 
     // Bin Level Monitoring Sensors for Plastic
@@ -110,35 +112,35 @@ void loop() {
 
     // BinPlastic
     if (distancePlastic <= 8) {
-        binLevelPlastic = 1;
+        binLevelPlastic = 3;
     }
-    else if (distancePlastic <=17 ) {
+    else if (distancePlastic <=14 ) {
         binLevelPlastic = 2;
         }
     else if (distancePlastic >= 18) {
-        binLevelPlastic = 3;
+        binLevelPlastic = 1;
     }
 
     //BinCan
     if (distanceCan <= 8) {
-        binLevelCan = 1;
+        binLevelCan = 3;
     }
-    else if (distanceCan <=17 ) {
+    else if (distanceCan <=14 ) {
         binLevelCan = 2;
     }
     else if (distanceCan >= 18) {
-        binLevelCan = 3;
+        binLevelCan = 1;
     }
         
     //BinPaper
     if (distancePaper <= 8) {
-        binLevelPaper = 1;
+        binLevelPaper = 3;
     }
-    else if (distancePaper <=17 ) {
+    else if (distancePaper <=14 ) {
         binLevelPaper = 2;
     }
     else if (distancePaper >= 18) {
-        binLevelPaper = 3;
+        binLevelPaper = 1;
     }
 
     //Pass Value to Firebase
