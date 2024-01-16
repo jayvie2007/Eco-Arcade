@@ -34,7 +34,10 @@ while True:
         temp = ("T:{:.1f}".format(temperature))
         humidity = dht.humidity
         humid = f"H:{humidity}"
-
+        check_starter = db().child("Stepper").get().val()
+        existing_can = check_starter["can"]
+        existing_plastic = check_starter["plastic"]
+        existing_paper = check_starter["paper"]
         #Check if humid and temp catches value else 0
         if not humid:
             humidty = 0
@@ -44,16 +47,25 @@ while True:
             temp = ("T:0")
 
         #First Count
+        if existing_can: 
+            result = "CN + 1"
+        elif existing_plastic:
+            result = "PL + 1"
+        elif existing_paper:
+            result = "PP + 1"
+        else:
+            result = ""
+
         with canvas(virtual) as draw:
-            text(draw, (0, 1), "Throw", fill="white", font=proportional(LCD_FONT))
+            text(draw, (0, 1), result, fill="white", font=proportional(LCD_FONT))
         with canvas(virtual_two) as draw:
-            text(draw, (0, 1), humid, fill="white", font=proportional(LCD_FONT))
+            text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
         db().child("Weather").update({"temperature":temperature,"humidity":humidity})
 
-        time.sleep(0.5)
+        time.sleep(1)
         #Second Count
         with canvas(virtual) as draw:
-            text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
+            text(draw, (0, 1), result, fill="white", font=proportional(LCD_FONT))
         with canvas(virtual_two) as draw:
             text(draw, (0, 1), humid, fill="white", font=proportional(LCD_FONT))
         db().child("Weather").update({"temperature":temperature,"humidity":humidity})
