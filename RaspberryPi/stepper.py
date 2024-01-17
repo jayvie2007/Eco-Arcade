@@ -10,7 +10,6 @@ out2 = 18 #PIN=12 RIGHT
 out3 = 27 #PIN=13 LEFT
 out4 = 22 #PIN=15 LEFT
 step_sleep = 0.002
-step_count = 500
 initialize_count = 0
 
 # setting up
@@ -30,7 +29,7 @@ def cleanup():
     GPIO.output( out3, GPIO.LOW )
     GPIO.output( out4, GPIO.LOW )
 
-def stepper_rotate_right():
+def stepper_rotate_right(step_count):
     for initialize_count in range(step_count):
         if initialize_count%4==0:
             GPIO.output( out4, GPIO.LOW )
@@ -70,7 +69,7 @@ while True:
 
     # Initial Trigger        
     if existing_starter:
-        stepper_rotate_right()
+        stepper_rotate_right(200)
         db().child("Stepper").update({"starter":False})
         time.sleep(5)
         check_starter = db().child("Stepper").get().val()
@@ -78,20 +77,20 @@ while True:
     
         # If can not detected move motor 
         if not existing_can:
-            stepper_rotate_right()
+            stepper_rotate_right(200)
             time.sleep(5)
             check_starter = db().child("Stepper").get().val()
             existing_can = check_starter["can"]
 
             # If can plastic detected move motor 
             if not existing_plastic:
-                stepper_rotate_right()
+                stepper_rotate_right(200)
                 time.sleep(5)
                 check_starter = db().child("Stepper").get().val()
                 existing_plastic = check_starter["plastic"]
 
                 # If can plastic detected move motor 
                 if not existing_paper:
-                    stepper_rotate_right()
+                    stepper_rotate_right(600)
         
 
