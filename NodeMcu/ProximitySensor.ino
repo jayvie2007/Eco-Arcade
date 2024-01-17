@@ -17,6 +17,9 @@ const int inductiveSensorPin = D1;
 //Setting up Capacitive Proximity for Paper Sensor
 const int capacitiveSensorPinPlastic = D2;
 
+//Setting up Infared for Paper Sensor
+// const int InfaredStarter = D3;
+
 //Setting up Ultrasonic for Starter Sensor
 const int echoPinStarter = D3; 
 const int trigPinStarter = D4;
@@ -42,6 +45,8 @@ void setup() {
     pinMode(echoPinStarter, INPUT);
     pinMode(inductiveSensorPin, INPUT);
     pinMode(capacitiveSensorPinPlastic, INPUT);
+    // pinMode(InfaredStarter, INPUT);
+
 }
 
 void loop() {
@@ -56,6 +61,20 @@ void loop() {
     Serial.print("Distance Starter: ");
     Serial.println(distanceStarter);
     delay(500)
+
+    // Get Readings From Infared Sensor Paper
+    int InfaredStarterValue = digitalRead(InfaredStarter);
+
+    // Trigger Starter
+    // if(InfaredStarterValue == LOW) {
+    //     // Set all value to false into Firebase
+    //     Firebase.setBool("LinearTwo/starter", false);
+    //     Firebase.setBool("LinearOne/starter", false);
+    //     Firebase.setBool("Stepper/can", false);
+    //     Firebase.setBool("Stepper/plastic", false);
+    //     Firebase.setBool("Stepper/paper", false);
+    //     Firebase.setBool("Stepper/start", true);
+    // }
 
     if (distanceStarter <= 5){
         // Set all value to false into Firebase
@@ -74,7 +93,7 @@ void loop() {
     int can_count = Firebase.getInt("BottleCount/can");
     if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
-        Firebase.setBool("LinearTwo/starter", true);
+        Firebase.setBool("LinearOne/starter", true);
         Firebase.setBool("Stepper/can", true);
         Serial.println("Can Detected");
         delay(10000);
@@ -90,7 +109,7 @@ void loop() {
     int plastic_count = Firebase.getInt("BottleCount/plastic");
     if (capacitiveSensorPlasticValue == HIGH) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
-        Firebase.setBool("LinearOne/starter", true);
+        Firebase.setBool("LinearTwo/starter", true);
         Firebase.setBool("Stepper/plastic", true);
         Serial.println("Plastic Detected");
         delay(10000);
