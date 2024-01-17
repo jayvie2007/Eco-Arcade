@@ -38,6 +38,7 @@ while True:
         existing_can = check_starter["can"]
         existing_plastic = check_starter["plastic"]
         existing_paper = check_starter["paper"]
+        existing_stop = check_starter["stop"]
         #Check if humid and temp catches value else 0
         if not humid:
             humidty = 0
@@ -53,6 +54,8 @@ while True:
             result = "PL + 1"
         elif existing_paper:
             result = "PP + 1"
+        elif existing_stop:
+            result = "WAIT"
         else:
             result = ""
 

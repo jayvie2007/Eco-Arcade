@@ -63,7 +63,7 @@ void loop() {
     delay(500)
 
     // Get Readings From Infared Sensor Paper
-    int InfaredStarterValue = digitalRead(InfaredStarter);
+    // int InfaredStarterValue = digitalRead(InfaredStarter);
 
     // Trigger Starter
     // if(InfaredStarterValue == LOW) {
@@ -73,7 +73,9 @@ void loop() {
     //     Firebase.setBool("Stepper/can", false);
     //     Firebase.setBool("Stepper/plastic", false);
     //     Firebase.setBool("Stepper/paper", false);
-    //     Firebase.setBool("Stepper/start", true);
+    //     Firebase.setBool("Stepper/starter", true);
+    //     Firebase.setBool("Stepper/stop", true);
+
     // }
 
     if (distanceStarter <= 5){
@@ -83,7 +85,8 @@ void loop() {
         Firebase.setBool("Stepper/can", false);
         Firebase.setBool("Stepper/plastic", false);
         Firebase.setBool("Stepper/paper", false);
-        Firebase.setBool("Stepper/start", true);
+        Firebase.setBool("Stepper/starter", true);
+        Firebase.setBool("Stepper/stop", true);
     }
     
     //  Get Readings from Inductive Sensor
@@ -95,6 +98,7 @@ void loop() {
         Firebase.setInt("BottleCount/can", can_count + 1);
         Firebase.setBool("LinearOne/starter", true);
         Firebase.setBool("Stepper/can", true);
+        Firebase.setBool("Stepper/stop", false);
         Serial.println("Can Detected");
         delay(10000);
 
@@ -111,6 +115,7 @@ void loop() {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
         Firebase.setBool("LinearTwo/starter", true);
         Firebase.setBool("Stepper/plastic", true);
+        Firebase.setBool("Stepper/stop", false);
         Serial.println("Plastic Detected");
         delay(10000);
         
