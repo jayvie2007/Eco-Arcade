@@ -61,14 +61,15 @@ while True:
         with canvas(virtual_two) as draw:
             text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
         db().child("Weather").update({"temperature":temperature,"humidity":humidity})
+        time.sleep(5)
 
-        time.sleep(1)
         #Second Count
         with canvas(virtual) as draw:
             text(draw, (0, 1), result, fill="white", font=proportional(LCD_FONT))
         with canvas(virtual_two) as draw:
             text(draw, (0, 1), humid, fill="white", font=proportional(LCD_FONT))
         db().child("Weather").update({"temperature":temperature,"humidity":humidity})
+        time.sleep(5)
 
     except RuntimeError as e:
         print("Reading from DHT failure: ", e.args)
