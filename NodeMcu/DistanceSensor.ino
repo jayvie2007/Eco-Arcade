@@ -68,10 +68,11 @@ void loop() {
     int paper_count = Firebase.getInt("BottleCount/paper"); 
     if(infaredSensorPaperValue == LOW) {
         Firebase.setInt("BottleCount/paper", paper_count + 1);
-        Firebase.setInt("Stepper/paper", true);
+        Firebase.setBool("Stepper/paper", true);
         Firebase.setBool("Stepper/stop", false);
         Serial.println("Paper Detected");
         delay(5000);
+        Firebase.setBool("Stepper/paper", false);
         
     }
     else{
