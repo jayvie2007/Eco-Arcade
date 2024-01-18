@@ -1,12 +1,21 @@
+linear.py
 from datetime import datetime
 from firebase_settings import db
 
 import os
 import sys
+import requests
+
 import time
 import board
 import RPi.GPIO as GPIO
 
+url = "https://www.google.com"
+timeout = 5
+
+def restart():
+    os.execv(sys.executable,['python3'] + sys.argv)
+    
 LinearOpen = 19 #PIN=35 LEFT
 LinearClose = 26 #PIN=37 LEFT
 
@@ -34,10 +43,13 @@ while True:
         check_starter = db().child("LinearOne").get().val()
         existing_starter = check_starter["starter"]    
 
-    if existing_starter:
-        open_motor(10)
-        db().child("LinearOne").update({"starter":False})
-        close_motor(10)
-
-
+    try:
+        if existing_starter:
+            open_motor(10)
+            db().child("LinearOne").update({"starter":False})
+            db().child("Stepper").update({"plastic":False})
+            close_motor(15)
+    except:
+        print("connecting")
+        restart() 
 

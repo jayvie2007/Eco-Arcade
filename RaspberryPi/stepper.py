@@ -1,8 +1,16 @@
+stepper.py
 from firebase_settings import db
 
 import RPi.GPIO as GPIO
 import board
 import time
+
+import os
+import sys
+import requests
+
+def restart():
+    os.execv(sys.executable,['python3'] + sys.argv)
 
 #STEPPER
 out1 = 17 #PIN=11 LEFT
@@ -66,31 +74,34 @@ while True:
         db().child("Stepper").update({"starter":False,"can":False,"plastic":False,"paper":False})
         check_starter = db().child("Stepper").get().val()
         existing_starter = check_starter["starter"]
-
-    # Initial Trigger        
-    if existing_starter:
-        stepper_rotate_right(200)
-        db().child("Stepper").update({"starter":False})
-        time.sleep(5)
-        check_starter = db().child("Stepper").get().val()
-        existing_can = check_starter["can"]
     
-        # If can not detected move motor 
-        if not existing_can:
+    try:
+        # Initial Trigger        
+        if existing_starter:
             stepper_rotate_right(200)
+            db().child("Stepper").update({"starter":False})
             time.sleep(5)
             check_starter = db().child("Stepper").get().val()
             existing_can = check_starter["can"]
-
-            # If can plastic detected move motor 
-            if not existing_plastic:
+        
+            # If can not detected move motor 
+            if not existing_can:
                 stepper_rotate_right(200)
                 time.sleep(5)
                 check_starter = db().child("Stepper").get().val()
                 existing_plastic = check_starter["plastic"]
 
                 # If can plastic detected move motor 
-                if not existing_paper:
-                    stepper_rotate_right(600)
-        
+                if not existing_plastic:
+                    stepper_rotate_right(200)
+                    time.sleep(5)
+                    check_starter = db().child("Stepper").get().val()
+                    existing_paper = check_starter["paper"]
 
+                    # If can plastic detected move motor 
+                    if not existing_paper:
+                        stepper_rotate_right(600)
+            db().child("Stepper").update({"starter":False,"can":False,"plastic":False,"paper":False})
+    except:
+        print("connecting")
+        restart()            

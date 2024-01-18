@@ -12,9 +12,19 @@ import adafruit_dht
 import board
 import time
 
+import os
+import sys
+import requests
+
+url = "https://www.google.com"
+timeout = 5
+
 #PIN=40 RIGHT
 dht = adafruit_dht.DHT22(board.D21) 
 dht = adafruit_dht.DHT22(board.D21, use_pulseio=False)
+
+def restart():
+    os.execv(sys.executable,['python3'] + sys.argv)
 
 #PIN DIN=19 LEFT CLK=23 LEFT CS=24 RIGHT
 serial = spi(port=0, device=0, gpio=noop())
@@ -29,54 +39,100 @@ virtual_two = viewport(device_two, width=32, height=16)
 device_two.contrast(100)
 
 while True:
-    try:
-        temperature = dht.temperature
-        temp = ("T:{:.1f}".format(temperature))
-        humidity = dht.humidity
-        humid = f"H:{humidity}"
-        check_starter = db().child("Stepper").get().val()
-        existing_can = check_starter["can"]
-        existing_plastic = check_starter["plastic"]
-        existing_paper = check_starter["paper"]
-        existing_stop = check_starter["stop"]
-        #Check if humid and temp catches value else 0
-        if not humid:
-            humidty = 0
-            humid = ("H:0")
-        if not temp:
-            temperature = 0
-            temp = ("T:0")
+    set_one = 0
+    set_two = 0
+    while set_one != 5:
+        set_one+=1
+        try:
+            temperature = dht.temperature
+            temp = ("T:{:.1f}".format(temperature))
+            humidity = dht.humidity
+            humid = f"H:{humidity}"
+            check_starter = db().child("Stepper").get().val()
+            existing_can = check_starter["can"]
+            existing_plastic = check_starter["plastic"]
+            existing_paper = check_starter["paper"]
+            existing_stop = check_starter["stop"]
+            #Check if humid and temp catches value else 0
+            if not humid:
+                humidty = 0
+                humid = ("H:0")
+            if not temp:
+                temperature = 0
+                temp = ("T:0")
 
-        #First Count
-        if existing_can: 
-            result = "CN + 1"
-        elif existing_plastic:
-            result = "PL + 1"
-        elif existing_paper:
-            result = "PP + 1"
-        elif existing_stop:
-            result = "WAIT"
-        else:
-            result = ""
+            #First Count
+            if existing_can: 
+                result = "CN + 1"
+            elif existing_plastic:
+                result = "PL + 1"
+            elif existing_paper:
+                result = "PP + 1"
+            elif existing_stop:
+                result = " WAIT"
+            else:
+                result = ""
 
-        with canvas(virtual) as draw:
-            text(draw, (0, 1), result, fill="white", font=proportional(LCD_FONT))
-        with canvas(virtual_two) as draw:
-            text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
-        db().child("Weather").update({"temperature":temperature,"humidity":humidity})
-        time.sleep(5)
+            with canvas(virtual) as draw:
+                text(draw, (0, 1), result, fill="white", font=proportional(LCD_FONT))
+            with canvas(virtual_two) as draw:
+                text(draw, (0, 1), temp, fill="white", font=proportional(LCD_FONT))
+            db().child("Weather").update({"temperature":temperature,"humidity":humidity})
+            time.sleep(1)
+        except RuntimeError as e:
+            print("Reading from DHT failure: ", e.args)
+            time.sleep(0.5)
+        except KeyboardInterrupt:
+            GPIO.cleanup()
+            print("Stopped")
+        except:
+            print("connecting")
+            restart()
 
-        #Second Count
-        with canvas(virtual) as draw:
-            text(draw, (0, 1), result, fill="white", font=proportional(LCD_FONT))
-        with canvas(virtual_two) as draw:
-            text(draw, (0, 1), humid, fill="white", font=proportional(LCD_FONT))
-        db().child("Weather").update({"temperature":temperature,"humidity":humidity})
-        time.sleep(5)
+    while set_two != 5:
+        set_two+=1
+        try:
+            temperature = dht.temperature
+            temp = ("T:{:.1f}".format(temperature))
+            humidity = dht.humidity
+            humid = f"H:{humidity}"
+            check_starter = db().child("Stepper").get().val()
+            existing_can = check_starter["can"]
+            existing_plastic = check_starter["plastic"]
+            existing_paper = check_starter["paper"]
+            existing_stop = check_starter["stop"]
+            #Check if humid and temp catches value else 0
+            if not humid:
+                humidty = 0
+                humid = ("H:0")
+            if not temp:
+                temperature = 0
+                temp = ("T:0")
 
-    except RuntimeError as e:
-        print("Reading from DHT failure: ", e.args)
-        time.sleep(0.5)
-    except KeyboardInterrupt:
-        GPIO.cleanup()
-        print("Stopped")
+            #First Count
+            if existing_can: 
+                result = "CN + 1"
+            elif existing_plastic:
+                result = "PL + 1"
+            elif existing_paper:
+                result = "PP + 1"
+            elif existing_stop:
+                result = " WAIT"
+            else:
+                result = ""
+                
+            with canvas(virtual) as draw:
+                text(draw, (0, 1), result, fill="white", font=proportional(LCD_FONT))
+            with canvas(virtual_two) as draw:
+                text(draw, (0, 1), humid, fill="white", font=proportional(LCD_FONT))
+            db().child("Weather").update({"temperature":temperature,"humidity":humidity})
+            time.sleep(1)
+        except RuntimeError as e:
+            print("Reading from DHT failure: ", e.args)
+            time.sleep(0.5)
+        except KeyboardInterrupt:
+            GPIO.cleanup()
+            print("Stopped")
+        except:
+            print("connecting")
+            restart()
