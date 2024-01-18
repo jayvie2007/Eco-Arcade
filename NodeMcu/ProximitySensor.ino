@@ -18,13 +18,7 @@ const int inductiveSensorPin = D1;
 const int capacitiveSensorPinPlastic = D2;
 
 //Setting up Infared for Paper Sensor
-// const int InfaredStarter = D3;
-
-//Setting up Ultrasonic for Starter Sensor
-const int echoPinStarter = D3; 
-const int trigPinStarter = D4;
-long durationStarter;
-int distanceStarter;
+const int InfaredStarter = D3;
 
 void setup() {
     Serial.begin(115200);
@@ -41,44 +35,19 @@ void setup() {
 
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
 
-    pinMode(trigPinStarter, OUTPUT);
-    pinMode(echoPinStarter, INPUT);
     pinMode(inductiveSensorPin, INPUT);
     pinMode(capacitiveSensorPinPlastic, INPUT);
-    // pinMode(InfaredStarter, INPUT);
+    pinMode(InfaredStarter, INPUT);
 
 }
 
 void loop() {
     // Monitoring Sensors for Starter
-    digitalWrite(trigPinStarter, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trigPinStarter, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trigPinStarter, LOW);
-    durationStarter = pulseIn(echoPinStarter, HIGH);
-    distanceStarter = durationStarter * 0.034 / 2;
-    Serial.print("Distance Starter: ");
-    Serial.println(distanceStarter);
-    delay(500)
-
     // Get Readings From Infared Sensor Paper
-    // int InfaredStarterValue = digitalRead(InfaredStarter);
+    int InfaredStarterValue = digitalRead(InfaredStarter);
 
     // Trigger Starter
-    // if(InfaredStarterValue == LOW) {
-    //     // Set all value to false into Firebase
-    //     Firebase.setBool("LinearTwo/starter", false);
-    //     Firebase.setBool("LinearOne/starter", false);
-    //     Firebase.setBool("Stepper/can", false);
-    //     Firebase.setBool("Stepper/plastic", false);
-    //     Firebase.setBool("Stepper/paper", false);
-    //     Firebase.setBool("Stepper/starter", true);
-    //     Firebase.setBool("Stepper/stop", true);
-
-    // }
-
-    if (distanceStarter <= 5){
+    if(InfaredStarterValue == LOW) {
         // Set all value to false into Firebase
         Firebase.setBool("LinearTwo/starter", false);
         Firebase.setBool("LinearOne/starter", false);
@@ -87,6 +56,7 @@ void loop() {
         Firebase.setBool("Stepper/paper", false);
         Firebase.setBool("Stepper/starter", true);
         Firebase.setBool("Stepper/stop", true);
+
     }
     
     //  Get Readings from Inductive Sensor
@@ -96,7 +66,7 @@ void loop() {
     int can_count = Firebase.getInt("BottleCount/can");
     if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
-        Firebase.setBool("LinearOne/starter", true);
+        Firebase.setBool("LinearTwo/starter", true);
         Firebase.setBool("Stepper/can", true);
         Firebase.setBool("Stepper/stop", false);
         Serial.println("Can Detected");
@@ -113,7 +83,7 @@ void loop() {
     int plastic_count = Firebase.getInt("BottleCount/plastic");
     if (capacitiveSensorPlasticValue == HIGH) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
-        Firebase.setBool("LinearTwo/starter", true);
+        Firebase.setBool("LinearOne/starter", true);
         Firebase.setBool("Stepper/plastic", true);
         Firebase.setBool("Stepper/stop", false);
         Serial.println("Plastic Detected");
