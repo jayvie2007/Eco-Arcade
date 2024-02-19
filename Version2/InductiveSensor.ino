@@ -42,9 +42,11 @@ void loop() {
         Firebase.setInt("BottleCount/can", can_count + 1);
         Firebase.setBool("Printer/start", true);
         Firebase.setBool("ServoCan/start", true);
+        Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Can Detected");
         delay(10000);
         Firebase.setBool("ServoCan/start", false);
+        Firebase.setString("BinResponse/message", "");
 
     } else {
         Serial.println("No Can Detected");

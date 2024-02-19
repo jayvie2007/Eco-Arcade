@@ -12,7 +12,7 @@
 // #define WIFI_PASSWORD "11111111"
 
 //Setting up Capacitive Proximity for Paper Sensor
-const int capacitiveSensorPinPlastic = D1;
+const int capacitiveSensorPinPaper = D1;
 
 void setup() {
     Serial.begin(115200);
@@ -43,9 +43,11 @@ void loop() {
         Firebase.setInt("BottleCount/paper", paper_count + 1);
         Firebase.setBool("Printer/start", true);
         Firebase.setBool("ServoPaper/start", true);
+        Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Paper Detected");
         delay(10000);
         Firebase.setBool("ServoPaper/start", false);
+        Firebase.setString("BinResponse/message", "");
         
     } else {
         Serial.println("No Paper Detected");
