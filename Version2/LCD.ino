@@ -13,6 +13,8 @@
 // #define WIFI_SSID "ECO WIFI"
 // #define WIFI_PASSWORD "11111111"
 
+// pin SDA = D1 SCL = D2
+
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 void setup() {
     Serial.begin(115200);
