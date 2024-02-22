@@ -35,10 +35,14 @@ void setup() {
    Servo1.attach(servoPin); 
 }
 void loop(){ 
-   bool servo_starter = Firebase.getBool("ServoPlastic/start");
+      bool servo_starter = Firebase.getBool("Servo/Plastic");
 
-   if (servo_starter == true)
-      Servo1.write(180); 
-      delay(10000);
-      Servo1.write(0);
+   if (servo_starter == true){
+      Servo1.write(0); 
+      Servo2.write(180); 
+      delay(2000);
+      Servo1.write(180);
+      Servo2.write(0); 
+      Firebase.setBool("Servo/Plastic",false);
+   }
 }

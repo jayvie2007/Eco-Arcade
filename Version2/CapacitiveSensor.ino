@@ -44,11 +44,10 @@ void loop() {
     if (capacitiveSensorPlasticValue == HIGH) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
         Firebase.setBool("Printer/start", true);.
-        Firebase.setBool("ServoPlastic/start", true);
+        Firebase.setBool("Servo/Plastic", true);
         Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Plastic Detected");
-        delay(10000);
-        Firebase.setBool("ServoPlastic/start", false);
+        delay(2000);
         Firebase.setString("BinResponse/message", "");
 
     } else {

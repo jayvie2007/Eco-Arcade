@@ -41,15 +41,14 @@ void loop() {
     if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
         Firebase.setBool("Printer/start", true);
-        Firebase.setBool("ServoCan/start", true);
+        Firebase.setBool("Servo/Can", true);
         Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Can Detected");
-        delay(10000);
-        Firebase.setBool("ServoCan/start", false);
+        delay(2000);
         Firebase.setString("BinResponse/message", "");
 
     } else {
         Serial.println("No Can Detected");
     }
-    delay(1000);
+    delay(500);
 }

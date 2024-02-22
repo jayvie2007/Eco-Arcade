@@ -13,7 +13,7 @@
 // #define WIFI_PASSWORD "11111111"
 
 // Create a servo object 
-int servoPin = D1; 
+int servoPin1 = D1; 
 Servo Servo1; 
 
 void setup() { 
@@ -32,13 +32,15 @@ void setup() {
 
    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
 
-   Servo1.attach(servoPin); 
+   Servo1.attach(servoPin1); 
 }
 void loop(){ 
-   bool servo_starter = Firebase.getBool("ServoCan/start");
+   bool servo_starter = Firebase.getBool("Servo/Can");
 
-   if (servo_starter == true)
+   if (servo_starter == true){
       Servo1.write(180); 
-      delay(10000);
-      Servo1.write(0);
+      delay(2000);
+      Servo1.write(0); 
+      Firebase.setBool("Servo/Can",false);
+   }
 }

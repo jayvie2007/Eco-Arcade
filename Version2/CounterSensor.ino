@@ -45,8 +45,7 @@ void loop() {
         Firebase.setBool("ServoPaper/start", true);
         Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Paper Detected");
-        delay(10000);
-        Firebase.setBool("ServoPaper/start", false);
+        delay(2000);
         Firebase.setString("BinResponse/message", "");
         
     } else {
