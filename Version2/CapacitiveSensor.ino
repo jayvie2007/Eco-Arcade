@@ -13,8 +13,12 @@
 // #define WIFI_SSID "ECO WIFI"
 // #define WIFI_PASSWORD "11111111"
 
+// Create a servo object 
+int servoPin1 = D1; 
+Servo Servo1;
+
 //Setting up Capacitive Proximity for Paper Sensor
-const int capacitiveSensorPinPlastic = D1;
+const int capacitiveSensorPinPlastic = D2;
 
 void setup() {
     Serial.begin(115200);
@@ -32,6 +36,8 @@ void setup() {
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
 
     pinMode(capacitiveSensorPinPlastic, INPUT);
+    Servo1.attach(servoPin1); 
+
 
 }
 
@@ -47,8 +53,11 @@ void loop() {
         Firebase.setBool("Servo/Plastic", true);
         Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Plastic Detected");
+        Servo1.write(0); 
         delay(2000);
+        Servo1.write(180); 
         Firebase.setString("BinResponse/message", "");
+        Firebase.setString("Servo/Can","stop");
 
     } else {
         Serial.println("No Plastic Detected");

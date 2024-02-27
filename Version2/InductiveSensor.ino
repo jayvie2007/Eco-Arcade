@@ -1,6 +1,8 @@
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <FirebaseArduino.h>
+#include <Servo.h> 
+
 
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -11,8 +13,13 @@
 // #define WIFI_SSID "ECO WIFI"
 // #define WIFI_PASSWORD "11111111"
 
+// Create a servo object 
+int servoPin1 = D1; 
+Servo Servo1;
+
 //Setting up Inductive Proximity Sensor
-const int inductiveSensorPin = D1;
+const int inductiveSensorPin = D2;
+
 
 void setup() {
     Serial.begin(115200);
@@ -30,6 +37,7 @@ void setup() {
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
 
     pinMode(inductiveSensorPin, INPUT);
+    Servo1.attach(servoPin1); 
 
 }
 
@@ -40,15 +48,18 @@ void loop() {
     int can_count = Firebase.getInt("BottleCount/can");
     if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
-        Firebase.setBool("Printer/start", true);
-        Firebase.setBool("Servo/Can", true);
+        Firebase.setString("Printer/start", "start");
+        Firebase.setString("Servo/Can", "start");
         Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Can Detected");
+        Servo1.write(0); 
         delay(2000);
+        Servo1.write(180); 
         Firebase.setString("BinResponse/message", "");
-
-    } else {
-        Serial.println("No Can Detected");
-    }
+        Firebase.setString("Servo/Can","stop");
+    }else{
+            Serial.println("No Can Detected");
+        }
     delay(500);
-}
+
+
