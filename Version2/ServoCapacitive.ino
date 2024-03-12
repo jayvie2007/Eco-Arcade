@@ -14,7 +14,9 @@
 
 // Create a servo object 
 int servoPin = D1; 
+int servoPin2 = D2; 
 Servo Servo1; 
+Servo Servo2; 
 
 void setup() { 
    Serial.begin(115200);
@@ -33,16 +35,16 @@ void setup() {
    Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
 
    Servo1.attach(servoPin); 
+   Servo2.attach(servoPin2); 
 }
 void loop(){ 
-      bool servo_starter = Firebase.getBool("Servo/Plastic");
-
-   if (servo_starter == true){
-      Servo1.write(0); 
+   bool servo_starter = Firebase.getString("Servo/Plastic");
+   if (servo_starter == "start"){
+      Servo1.write(180); 
       Servo2.write(180); 
       delay(2000);
-      Servo1.write(180);
+      Servo1.write(0);
       Servo2.write(0); 
-      Firebase.setBool("Servo/Plastic",false);
+      Firebase.setString("Servo/Plastic","stop");
    }
 }

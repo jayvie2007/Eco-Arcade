@@ -53,9 +53,9 @@ void loop() {
         Firebase.setBool("Servo/Plastic", true);
         Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Plastic Detected");
-        Servo1.write(0); 
-        delay(2000);
         Servo1.write(180); 
+        delay(2000);
+        Servo1.write(0); 
         Firebase.setString("BinResponse/message", "");
         Firebase.setString("Servo/Can","stop");
 

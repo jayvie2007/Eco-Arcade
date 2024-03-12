@@ -52,9 +52,9 @@ void loop() {
         Firebase.setString("Servo/Can", "start");
         Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Can Detected");
-        Servo1.write(0); 
-        delay(2000);
         Servo1.write(180); 
+        delay(2000);
+        Servo1.write(0); 
         Firebase.setString("BinResponse/message", "");
         Firebase.setString("Servo/Can","stop");
     }else{

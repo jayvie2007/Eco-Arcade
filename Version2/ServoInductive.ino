@@ -37,10 +37,10 @@ void setup() {
 void loop(){ 
    bool servo_starter = Firebase.getBool("Servo/Can");
 
-   if (servo_starter == true){
+   if (servo_starter == "start"){
       Servo1.write(180); 
       delay(2000);
       Servo1.write(0); 
-      Firebase.setBool("Servo/Can",false);
+      Firebase.setString("Servo/Can","stop");
    }
 }
