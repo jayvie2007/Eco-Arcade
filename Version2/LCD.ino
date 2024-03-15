@@ -3,6 +3,14 @@
 #include <FirebaseArduino.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#include "DHT.h"
+
+#define DHTTYPE DHT22
+#define DHTPIN D3
+
+float humidity;
+float temperature;
+DHT dht(DHTPIN, DHTTYPE);
 
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -36,11 +44,12 @@ void setup() {
     lcd.init();
     lcd.backlight();
 
+    dht.begin();
+
 }
 void loop() {
-
+    String get_text = Firebase.getString("BinResponse/message");
     if (get_text){
-      String get_text = Firebase.getString("BinResponse/message");
       lcd.setCursor(0, 0);
       lcd.print("");
       lcd.print(0, 1);
@@ -48,10 +57,20 @@ void loop() {
       delay(1000);
     } 
     else{
+
+      humidity = dht.readHumidity();
+      temperature = dht.readTemperature();
+
       lcd.setCursor(0, 0);
       lcd.print("");
       lcd.setCursor(0, 1);
-      lcd.print("BIN IS READY");
+      lcd.print("Humidity: " + humidity);
+      // lcd.print("Humidity: ");
+      // lcd.print(String(humidity));
+      lcd.setCursor(0, 2);
+      lcd.print("Temperature: " + temperature);
+      // lcd.print("Temperature: ");
+      // lcd.print(String(temperature));
       delay(800);
       lcd.clear();
     }

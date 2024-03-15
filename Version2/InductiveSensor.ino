@@ -45,9 +45,11 @@ void loop() {
     int inductiveSensorValue = digitalRead(inductiveSensorPin);
 
     // Get Current Can Count From Firebase
+    int get_can_count = Firebase.getInt("Printer/Line2");
     int can_count = Firebase.getInt("BottleCount/can");
     if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
+        Firebase.setInt("Printer/plastic", get_can_count + 1);
         Firebase.setString("Printer/start", "start");
         Firebase.setString("Servo/Can", "start");
         Firebase.setString("BinResponse/message", "Can Detected!");

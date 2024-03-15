@@ -40,19 +40,25 @@ void loop() {
           Serial.println("\n\r");
           Serial.println("\n\r");
           delay(100);
+          Serial.print("Can = ")
           Serial.println(line2);
+          Serial.print("Plastic = ")
           Serial.println(line3);
+          Serial.print("Paper = ")
+          Serial.println(line4);
           delay(100);
           Serial.println("\n\r");
           Serial.println("\n\r");
           Serial.println("---------------------------- \n\r");
-          Serial.println(line4);
           Serial.println(line5);
           Serial.println("Thank You.");
           Serial.println("\n\r");
           Serial.println("\n\r");
           Serial.println("\n\r");
-          Firebase.setString("Printer/Start","stop");
+          Firebase.setString("Printer/start", "stop");
+          Firebase.setInt("Printer/Line2", 0);
+          Firebase.setInt("Printer/Line2", 0);
+          Firebase.setInt("Printer/Line2", 0);
         }    
     }
     else{

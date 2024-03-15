@@ -1,8 +1,7 @@
-
-@@ -0,0 +1,54 @@
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <FirebaseArduino.h>
+#include <Servo.h> 
 
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -15,10 +14,12 @@
 
 // Create a servo object 
 int servoPin1 = D1; 
+int servoPin2 = D2; 
 Servo Servo1;
+Servo Servo2;
 
 //Setting up Capacitive Proximity for Paper Sensor
-const int capacitiveSensorPinPlastic = D2;
+const int capacitiveSensorPinPlastic = D3;
 
 void setup() {
     Serial.begin(115200);
@@ -37,6 +38,7 @@ void setup() {
 
     pinMode(capacitiveSensorPinPlastic, INPUT);
     Servo1.attach(servoPin1); 
+    Servo2.attach(servoPin2); 
 
 
 }
@@ -46,12 +48,31 @@ void loop() {
     int capacitiveSensorPlasticValue = digitalRead(capacitiveSensorPinPlastic);
 
     // Get Current Paper Count From Firebase
+    int paper_count = Firebase.getInt("BottleCount/paper");
     int plastic_count = Firebase.getInt("BottleCount/plastic");
+    int get_plastic_count = Firebase.getInt("Printer/Line3");
+    int get_paper_count = Firebase.getInt("Printer/Line4");
+    String paper_starter = Firebase.getString("Servo/Trigger");
+
+    if (paper_starter == "start"){
+        Firebase.setInt("BottleCount/paper", paper_count + 1);
+        Firebase.setInt("Printer/plastic", get_paper_count + 1);
+        Firebase.setString("Printer/start", "start");
+        Firebase.setString("BinResponse/message", "Paper Detected!");
+        Serial.println("Paper Detected");
+        Servo2.write(180); 
+        delay(2000);
+        Servo2.write(0); 
+        Firebase.setString("BinResponse/message", "");
+        Firebase.setString("Servo/Trigger","stop");
+    }
+
     if (capacitiveSensorPlasticValue == HIGH) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
-        Firebase.setBool("Printer/start", true);.
-        Firebase.setBool("Servo/Plastic", true);
-        Firebase.setString("BinResponse/message", "Can Detected!");
+        Firebase.setInt("Printer/plastic", get_plastic_count + 1);
+        Firebase.setString("Printer/start", "start");
+        Firebase.setString("Servo/Plastic", "start");
+        Firebase.setString("BinResponse/message", "Plastic Detected!");
         Serial.println("Plastic Detected");
         Servo1.write(180); 
         delay(2000);
@@ -60,7 +81,7 @@ void loop() {
         Firebase.setString("Servo/Can","stop");
 
     } else {
-        Serial.println("No Plastic Detected");
+        Serial.println("No Plastic/Paper Detected");
     }
     delay(1000);
 }
