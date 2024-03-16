@@ -47,6 +47,7 @@ void loop() {
     // Get Current Can Count From Firebase
     int get_can_count = Firebase.getInt("Printer/Line2");
     int can_count = Firebase.getInt("BottleCount/can");
+    Serial.println(inductiveSensorValue);
     if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
         Firebase.setInt("Printer/plastic", get_can_count + 1);
@@ -63,5 +64,4 @@ void loop() {
             Serial.println("No Can Detected");
         }
     delay(500);
-
-
+}

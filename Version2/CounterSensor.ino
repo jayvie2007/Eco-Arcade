@@ -36,20 +36,17 @@ void setup() {
 void loop() {
     // Get Readings From Capacitive Sensor Paper
     int capacitiveSensorPaperValue = digitalRead(capacitiveSensorPinPaper);
-
-    // Get Current Paper Count From Firebase
-    int paper_count = Firebase.getInt("BottleCount/paper");
     if (capacitiveSensorPaperValue == HIGH) {
-        Firebase.setInt("BottleCount/paper", paper_count + 1);
-        Firebase.setBool("Printer/start", true);
-        Firebase.setBool("ServoPaper/start", true);
-        Firebase.setString("BinResponse/message", "Can Detected!");
-        Serial.println("Paper Detected");
+      delay(3000);
+      String can_starter = Firebase.getString("Servo/Can");
+      String plastic_starter = Firebase.getString("Servo/Plastic");
+      if (plastic_starter == "start" || can_starter == "start"){
+        return;
+      }
+      else{
+        Firebase.setString("Servo/Paper", "start");
         delay(2000);
-        Firebase.setString("BinResponse/message", "");
-        
-    } else {
-        Serial.println("No Paper Detected");
-    }
-    delay(1000);
+      } 
+    delay(500);
+  }
 }

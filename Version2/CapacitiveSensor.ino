@@ -19,7 +19,7 @@ Servo Servo1;
 Servo Servo2;
 
 //Setting up Capacitive Proximity for Paper Sensor
-const int capacitiveSensorPinPlastic = D3;
+const int capacitiveSensorPinPlastic = D4;
 
 void setup() {
     Serial.begin(115200);
@@ -46,13 +46,13 @@ void setup() {
 void loop() {
     // Get Readings From Capacitive Sensor Paper
     int capacitiveSensorPlasticValue = digitalRead(capacitiveSensorPinPlastic);
-
+    
     // Get Current Paper Count From Firebase
     int paper_count = Firebase.getInt("BottleCount/paper");
     int plastic_count = Firebase.getInt("BottleCount/plastic");
     int get_plastic_count = Firebase.getInt("Printer/Line3");
     int get_paper_count = Firebase.getInt("Printer/Line4");
-    String paper_starter = Firebase.getString("Servo/Trigger");
+    String paper_starter = Firebase.getString("Servo/Paper");
 
     if (paper_starter == "start"){
         Firebase.setInt("BottleCount/paper", paper_count + 1);
@@ -64,9 +64,10 @@ void loop() {
         delay(2000);
         Servo2.write(0); 
         Firebase.setString("BinResponse/message", "");
-        Firebase.setString("Servo/Trigger","stop");
+        Firebase.setString("Servo/Paper","stop");
     }
 
+    Serial.println(capacitiveSensorPlasticValue);
     if (capacitiveSensorPlasticValue == HIGH) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
         Firebase.setInt("Printer/plastic", get_plastic_count + 1);
@@ -75,10 +76,12 @@ void loop() {
         Firebase.setString("BinResponse/message", "Plastic Detected!");
         Serial.println("Plastic Detected");
         Servo1.write(180); 
+        Servo2.write(180); 
         delay(2000);
         Servo1.write(0); 
+        Servo2.write(0); 
         Firebase.setString("BinResponse/message", "");
-        Firebase.setString("Servo/Can","stop");
+        Firebase.setString("Servo/Plastic","stop");
 
     } else {
         Serial.println("No Plastic/Paper Detected");
