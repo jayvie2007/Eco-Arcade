@@ -17,7 +17,7 @@ int switch_button = D4;
 float humidity;
 float temperature;
 DHT dht(DHTPIN, DHTTYPE);
- 
+  
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "XdKualT5QNGRWRWywe1d1lhNc9AL82ivhoge59v7"
