@@ -50,7 +50,7 @@ void loop() {
     Serial.println(inductiveSensorValue);
     if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
-        Firebase.setInt("Printer/plastic", get_can_count + 1);
+        Firebase.setInt("Printer/Line2", get_can_count + 1);
         Firebase.setString("Printer/start", "start");
         Firebase.setString("Servo/Can", "start");
         Firebase.setString("BinResponse/message", "Can Detected!");

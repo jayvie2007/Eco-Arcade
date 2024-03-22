@@ -56,7 +56,7 @@ void loop() {
 
     if (paper_starter == "start"){
         Firebase.setInt("BottleCount/paper", paper_count + 1);
-        Firebase.setInt("Printer/plastic", get_paper_count + 1);
+        Firebase.setInt("Printer/Line4", get_paper_count + 1);
         Firebase.setString("Printer/start", "start");
         Firebase.setString("BinResponse/message", "Paper Detected!");
         Serial.println("Paper Detected");
@@ -70,7 +70,7 @@ void loop() {
     Serial.println(capacitiveSensorPlasticValue);
     if (capacitiveSensorPlasticValue == HIGH) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
-        Firebase.setInt("Printer/plastic", get_plastic_count + 1);
+        Firebase.setInt("Printer/Line3", get_plastic_count + 1);
         Firebase.setString("Printer/start", "start");
         Firebase.setString("Servo/Plastic", "start");
         Firebase.setString("BinResponse/message", "Plastic Detected!");
@@ -86,5 +86,5 @@ void loop() {
     } else {
         Serial.println("No Plastic/Paper Detected");
     }
-    delay(1000);
+    delay(500);
 }
