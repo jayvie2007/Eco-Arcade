@@ -156,6 +156,9 @@ void loop() {
     } else{
         humidity = dht.readHumidity();
         temperature = dht.readTemperature();
+        Firebase.setInt("Weather/humidity", humidity);
+        Firebase.setInt("Weather/temperature", temperature);
+
         Serial.println("humidity");
         Serial.println(humidity);
         Serial.println("temperature");
