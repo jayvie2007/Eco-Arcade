@@ -5,11 +5,15 @@
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "XdKualT5QNGRWRWywe1d1lhNc9AL82ivhoge59v7"
-#define WIFI_SSID "OPPO A92"
-#define WIFI_PASSWORD "11111111"
+#define WIFI_SSID "Smartbro-9EC6"
+#define WIFI_PASSWORD "smartbro"
 
-// #define WIFI_SSID "ECO WIFI"
-// #define WIFI_PASSWORD "11111111"
+//Setting up PlasticCan Ultrasonic Sensor
+const int echoPinCan = 0; //jumper D3
+const int trigPinCan = 2; //jumper D4
+long durationCan;
+int distanceCan;
+int binLevelCan;
 
 //Setting up Capacitive Proximity for Paper Sensor
 const int capacitiveSensorPinPaper = D1;
@@ -28,7 +32,8 @@ void setup() {
     Serial.println(WiFi.localIP());
 
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
-
+    pinMode(trigPinCan, OUTPUT);
+    pinMode(echoPinCan, INPUT);
     pinMode(capacitiveSensorPinPaper, INPUT);
 
 }
@@ -49,4 +54,27 @@ void loop() {
       } 
     delay(500);
   }
+  
+    // Bin Level Monitoring Sensors for Can
+    digitalWrite(trigPinCan, LOW);
+    delayMicroseconds(2);
+    digitalWrite(trigPinCan, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPinCan, LOW);
+    durationCan = pulseIn(echoPinCan, HIGH);
+    distanceCan = durationCan * 0.034 / 2;
+    Serial.print("Distance Can: ");
+    Serial.println(distanceCan);
+
+    //BinCan
+    if (distanceCan <= 8) {
+        binLevelCan = 3;
+    }
+    else if (distanceCan <=14 ) {
+        binLevelCan = 2;
+    }
+    else if (distanceCan >= 18) {
+        binLevelCan = 1;
+    }
+    Firebase.setFloat("Bin/can", binLevelCan);
 }

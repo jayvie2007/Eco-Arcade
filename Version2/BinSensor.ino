@@ -5,11 +5,8 @@
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "XdKualT5QNGRWRWywe1d1lhNc9AL82ivhoge59v7"
-#define WIFI_SSID "OPPO A92"
-#define WIFI_PASSWORD "11111111"
-
-// #define WIFI_SSID "ECO WIFI"
-// #define WIFI_PASSWORD "11111111"
+#define WIFI_SSID "Smartbro-9EC6"
+#define WIFI_PASSWORD "smartbro"
 
 //Setting up PlasticBin Ultrasonic Sensor
 const int echoPinPlastic = 5; //jumper D1
@@ -17,13 +14,6 @@ const int trigPinPlastic = 4; //jumper D2
 long durationPlastic;
 int distancePlastic;
 int binLevelPlastic;
-
-//Setting up PlasticCan Ultrasonic Sensor
-const int echoPinCan = 0; //jumper D3
-const int trigPinCan = 2; //jumper D4
-long durationCan;
-int distanceCan;
-int binLevelCan;
 
 //Setting up PaperBin Ultrasonic Sensor
 const int echoPinPaper = 14; //jumper D5
@@ -51,8 +41,6 @@ void setup() {
 
     pinMode(trigPinPlastic, OUTPUT);
     pinMode(echoPinPlastic, INPUT);
-    pinMode(trigPinCan, OUTPUT);
-    pinMode(echoPinCan, INPUT);
     pinMode(trigPinPaper, OUTPUT);
     pinMode(echoPinPaper, INPUT);
 }
@@ -68,17 +56,6 @@ void loop() {
     distancePlastic = durationPlastic * 0.034 / 2;
     Serial.print("Distance Plastic: ");
     Serial.println(distancePlastic);
-
-    // Bin Level Monitoring Sensors for Can
-    digitalWrite(trigPinCan, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trigPinCan, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trigPinCan, LOW);
-    durationCan = pulseIn(echoPinCan, HIGH);
-    distanceCan = durationCan * 0.034 / 2;
-    Serial.print("Distance Can: ");
-    Serial.println(distanceCan);
 
     // Bin Level Monitoring Sensors for Paper
     digitalWrite(trigPinPaper, LOW);
@@ -101,17 +78,6 @@ void loop() {
     else if (distancePlastic >= 18) {
         binLevelPlastic = 1;
     }
-
-    //BinCan
-    if (distanceCan <= 8) {
-        binLevelCan = 3;
-    }
-    else if (distanceCan <=14 ) {
-        binLevelCan = 2;
-    }
-    else if (distanceCan >= 18) {
-        binLevelCan = 1;
-    }
         
     //BinPaper
     if (distancePaper <= 8) {
@@ -126,7 +92,6 @@ void loop() {
 
     //Pass Value to Firebase
     Firebase.setFloat("Bin/plastic", binLevelPlastic);
-    Firebase.setFloat("Bin/can", binLevelCan);
     Firebase.setFloat("Bin/paper", binLevelPaper);
 
     if (Firebase.failed()) {
