@@ -6,6 +6,9 @@
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "XdKualT5QNGRWRWywe1d1lhNc9AL82ivhoge59v7"
+// #define WIFI_SSID "OPPO A92"
+// #define WIFI_PASSWORD "11111111"
+
 #define WIFI_SSID "Smartbro-9EC6"
 #define WIFI_PASSWORD "smartbro"
 
@@ -36,7 +39,8 @@ void setup() {
     pinMode(capacitiveSensorPinPlastic, INPUT);
     Servo1.attach(servoPin1); 
     Servo2.attach(servoPin2); 
-
+    Servo1.write(0); 
+    Servo2.write(0); 
 
 }
 
@@ -50,8 +54,7 @@ void loop() {
     int get_plastic_count = Firebase.getInt("Printer/Line3");
     int get_paper_count = Firebase.getInt("Printer/Line4");
     String paper_starter = Firebase.getString("Servo/Paper");
-    
-    // Trigger servo for paper
+
     if (paper_starter == "start"){
         Firebase.setInt("BottleCount/paper", paper_count + 1);
         Firebase.setInt("Printer/Line4", get_paper_count + 1);
@@ -65,7 +68,7 @@ void loop() {
         Firebase.setString("Servo/Paper","stop");
     }
 
-    // Trigger servo for plastic
+    Serial.println(capacitiveSensorPlasticValue);
     if (capacitiveSensorPlasticValue == HIGH) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
         Firebase.setInt("Printer/Line3", get_plastic_count + 1);
@@ -84,5 +87,4 @@ void loop() {
     } else {
         Serial.println("No Plastic/Paper Detected");
     }
-    delay(500);
 }

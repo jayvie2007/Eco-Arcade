@@ -7,6 +7,9 @@
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "XdKualT5QNGRWRWywe1d1lhNc9AL82ivhoge59v7"
+// #define WIFI_SSID "OPPO A92"
+// #define WIFI_PASSWORD "11111111"
+
 #define WIFI_SSID "Smartbro-9EC6"
 #define WIFI_PASSWORD "smartbro"
 
@@ -35,6 +38,7 @@ void setup() {
 
     pinMode(inductiveSensorPin, INPUT);
     Servo1.attach(servoPin1); 
+    Servo1.write(0); 
 
 }
 
@@ -44,9 +48,8 @@ void loop() {
     // Get Current Can Count From Firebase
     int get_can_count = Firebase.getInt("Printer/Line2");
     int can_count = Firebase.getInt("BottleCount/can");
+    int get_can_block = Firebase.getStr("Servo/CanBlock");
     Serial.println(inductiveSensorValue);
-
-    // Trigger servo for can
     if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
         Firebase.setInt("Printer/Line2", get_can_count + 1);
@@ -56,11 +59,15 @@ void loop() {
         Serial.println("Can Detected");
         Servo1.write(180); 
         delay(2000);
-        Servo1.write(10); 
+        Servo1.write(0); 
         Firebase.setString("BinResponse/message", "");
         Firebase.setString("Servo/Can","stop");
+    else if (get_can_block == "start") {
+        Servo2.write(180); 
+        delay(2000);
+        Servo2.write(0); 
+    }
     }else{
             Serial.println("No Can Detected");
         }
-    delay(500);
 }

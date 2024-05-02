@@ -5,6 +5,9 @@
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "XdKualT5QNGRWRWywe1d1lhNc9AL82ivhoge59v7"
+// #define WIFI_SSID "OPPO A92"
+// #define WIFI_PASSWORD "11111111"
+
 #define WIFI_SSID "Smartbro-9EC6"
 #define WIFI_PASSWORD "smartbro"
 
@@ -69,24 +72,66 @@ void loop() {
     Serial.println(distancePaper);
 
     // BinPlastic
-    if (distancePlastic <= 8) {
-        binLevelPlastic = 3;
+    if (distancePlastic <= 3) {
+        binLevelPlastic = 10;
     }
-    else if (distancePlastic <=14 ) {
+    else if (distancePlastic <=6 ) {
+        binLevelPlastic = 9;
+        }
+    else if (distancePlastic <=9 ) {
+        binLevelPlastic = 8;
+        }
+    else if (distancePlastic <=12 ) {
+        binLevelPlastic = 7;
+        }
+    else if (distancePlastic <=15 ) {
+        binLevelPlastic = 6;
+        }
+    else if (distancePlastic <=18 ) {
+        binLevelPlastic = 5;
+        }
+    else if (distancePlastic <=21 ) {
+        binLevelPlastic = 4;
+        }
+    else if (distancePlastic <=24 ) {
+        binLevelPlastic = 3;
+        }
+    else if (distancePlastic <=27 ) {
         binLevelPlastic = 2;
         }
-    else if (distancePlastic >= 18) {
+    else if (distancePlastic >= 30) {
         binLevelPlastic = 1;
     }
         
     //BinPaper
-    if (distancePaper <= 8) {
+    if (distancePaper <= 3) {
+        binLevelPaper = 10;
+    }
+    else if (distancePaper <=6 ) {
+        binLevelPaper = 9;
+        }
+    else if (distancePaper <=9 ) {
+        binLevelPaper = 8;
+        }
+    else if (distancePaper <=12 ) {
+        binLevelPaper = 7;
+        }
+    else if (distancePaper <=15 ) {
+        binLevelPaper = 6;
+        }
+    else if (distancePaper <=18 ) {
+        binLevelPaper = 5;
+        }
+    else if (distancePaper <=21 ) {
+        binLevelPaper = 4;
+        }
+    else if (distancePaper <=24 ) {
         binLevelPaper = 3;
-    }
-    else if (distancePaper <=14 ) {
+        }
+    else if (distancePaper <=27 ) {
         binLevelPaper = 2;
-    }
-    else if (distancePaper >= 18) {
+        }
+    else if (distancePaper >= 30) {
         binLevelPaper = 1;
     }
 
