@@ -13,7 +13,7 @@
 int is_switch_press = 0; // For detecting the switch press status
 int debounce_delay = 300; //Debounce delay
 int switch_button = D7;
-
+ 
 float humidity;
 float temperature;
 DHT dht(DHTPIN, DHTTYPE);
