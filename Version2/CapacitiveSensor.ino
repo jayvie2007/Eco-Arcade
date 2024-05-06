@@ -67,7 +67,7 @@ void loop() {
         Firebase.setString("BinResponse/message", "");
         Firebase.setString("Servo/Paper","stop");
     }
-
+ 
     Serial.println(capacitiveSensorPlasticValue);
     if (capacitiveSensorPlasticValue == HIGH) {
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
