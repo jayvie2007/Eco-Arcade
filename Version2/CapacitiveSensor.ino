@@ -66,7 +66,7 @@ void loop() {
         Servo2.write(0); 
         Firebase.setString("BinResponse/message", "");
         Firebase.setString("Servo/Paper","stop");
-    }
+    } 
  
     Serial.println(capacitiveSensorPlasticValue);
     if (capacitiveSensorPlasticValue == HIGH) {
