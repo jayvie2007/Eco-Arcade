@@ -54,7 +54,7 @@ void loop() {
     int get_plastic_count = Firebase.getInt("Printer/Line3");
     int get_paper_count = Firebase.getInt("Printer/Line4");
     String paper_starter = Firebase.getString("Servo/Paper");
-
+ 
     if (paper_starter == "start"){
         Firebase.setInt("BottleCount/paper", paper_count + 1);
         Firebase.setInt("Printer/Line4", get_paper_count + 1);
