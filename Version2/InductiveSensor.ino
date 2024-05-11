@@ -16,6 +16,8 @@
 // Create a servo object 
 int servoPin1 = D1; 
 Servo Servo1;
+int servoPin2 = D5; 
+Servo Servo2;
 
 //Setting up Inductive Proximity Sensor
 const int inductiveSensorPin = D2;
@@ -39,18 +41,25 @@ void setup() {
     pinMode(inductiveSensorPin, INPUT);
     Servo1.attach(servoPin1); 
     Servo1.write(0); 
+    Servo2.attach(servoPin2); 
+    Servo2.write(180); 
 
 }
 
 void loop() {
+    String start_opener = Firebase.getString("Servo/CanBlock");
     int inductiveSensorValue = digitalRead(inductiveSensorPin);
-
-    // Get Current Can Count From Firebase
     int get_can_count = Firebase.getInt("Printer/Line2");
     int can_count = Firebase.getInt("BottleCount/can");
-    int get_can_block = Firebase.getStr("Servo/CanBlock");
     Serial.println(inductiveSensorValue);
-    if (inductiveSensorValue == HIGH) {
+    if (start_opener == "start"){
+      Servo2.write(90); 
+      delay(2000);
+      Servo2.write(180); 
+      Firebase.setString("Servo/CanBlock", "stop");
+    }
+    // Get Current Can Count From Firebase
+    else if (inductiveSensorValue == HIGH) {
         Firebase.setInt("BottleCount/can", can_count + 1);
         Firebase.setInt("Printer/Line2", get_can_count + 1);
         Firebase.setString("Printer/start", "start");
@@ -58,15 +67,13 @@ void loop() {
         Firebase.setString("BinResponse/message", "Can Detected!");
         Serial.println("Can Detected");
         Servo1.write(180); 
+        Servo2.write(90); 
         delay(2000);
         Servo1.write(0); 
+        Servo2.write(180); 
         Firebase.setString("BinResponse/message", "");
         Firebase.setString("Servo/Can","stop");
-    else if (get_can_block == "start") {
-        Servo2.write(180); 
-        delay(2000);
-        Servo2.write(0); 
-    }
+        delay(1000);
     }else{
             Serial.println("No Can Detected");
         }

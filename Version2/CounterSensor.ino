@@ -56,7 +56,7 @@ void loop() {
         Firebase.setString("Servo/CanBlock", "start");
         delay(2000);
       } 
-  }
+    }
   
     // Bin Level Monitoring Sensors for Can
     digitalWrite(trigPinCan, LOW);
@@ -68,8 +68,6 @@ void loop() {
     distanceCan = durationCan * 0.034 / 2;
     Serial.print("Distance Can: ");
     Serial.println(distanceCan);
-    delay(200);
-
     //BinCan
     if (distanceCan <= 3) {
         binLevelCan = 10;

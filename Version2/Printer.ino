@@ -13,11 +13,11 @@
 int is_switch_press = 0; // For detecting the switch press status
 int debounce_delay = 300; //Debounce delay
 int switch_button = D7;
- 
+
 float humidity;
 float temperature;
 DHT dht(DHTPIN, DHTTYPE);
- 
+
 //Setting up firebase and wifi connection
 #define FIREBASE_HOST "eco-arcade-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "XdKualT5QNGRWRWywe1d1lhNc9AL82ivhoge59v7"

@@ -17,7 +17,7 @@ int servoPin1 = D1;
 int servoPin2 = D2; 
 Servo Servo1;
 Servo Servo2;
-
+    
 //Setting up Capacitive Proximity for Paper Sensor
 const int capacitiveSensorPinPlastic = D5;
 
@@ -39,7 +39,7 @@ void setup() {
     pinMode(capacitiveSensorPinPlastic, INPUT);
     Servo1.attach(servoPin1); 
     Servo2.attach(servoPin2); 
-    Servo1.write(0); 
+    Servo1.write(90); 
     Servo2.write(0); 
 
 }
@@ -54,36 +54,44 @@ void loop() {
     int get_plastic_count = Firebase.getInt("Printer/Line3");
     int get_paper_count = Firebase.getInt("Printer/Line4");
     String paper_starter = Firebase.getString("Servo/Paper");
- 
-    if (paper_starter == "start"){
+    String can_starter = Firebase.getString("Servo/Can");
+
+    if (can_starter == "start"){
+      return;
+    }
+
+    else if (paper_starter == "start"){
         Firebase.setInt("BottleCount/paper", paper_count + 1);
         Firebase.setInt("Printer/Line4", get_paper_count + 1);
         Firebase.setString("Printer/start", "start");
-        Firebase.setString("BinResponse/message", "Paper Detected!");
+        Firebase.setString("BinResponse/message", "Unwanted Detected!");
         Serial.println("Paper Detected");
-        Servo2.write(180); 
+        Firebase.setString("Servo/CanBlock", "start");
+        Servo1.write(180); 
         delay(2000);
-        Servo2.write(0); 
+        Servo1.write(90); 
         Firebase.setString("BinResponse/message", "");
         Firebase.setString("Servo/Paper","stop");
-    } 
- 
-    Serial.println(capacitiveSensorPlasticValue);
-    if (capacitiveSensorPlasticValue == HIGH) {
+        delay(1000);
+    }
+
+    else if (capacitiveSensorPlasticValue == HIGH) {
+        Serial.println(capacitiveSensorPlasticValue);
         Firebase.setInt("BottleCount/plastic", plastic_count + 1);
         Firebase.setInt("Printer/Line3", get_plastic_count + 1);
         Firebase.setString("Printer/start", "start");
         Firebase.setString("Servo/Plastic", "start");
         Firebase.setString("BinResponse/message", "Plastic Detected!");
         Serial.println("Plastic Detected");
+        Firebase.setString("Servo/CanBlock", "start");
         Servo1.write(180); 
         Servo2.write(180); 
         delay(2000);
-        Servo1.write(0); 
+        Servo1.write(90); 
         Servo2.write(0); 
         Firebase.setString("BinResponse/message", "");
         Firebase.setString("Servo/Plastic","stop");
-
+        delay(1000);
     } else {
         Serial.println("No Plastic/Paper Detected");
     }
