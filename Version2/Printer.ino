@@ -6,7 +6,7 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "DHT.h"
-
+ 
 #define DHTTYPE DHT22
 #define DHTPIN D5
 
