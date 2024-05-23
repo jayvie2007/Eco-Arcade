@@ -100,4 +100,4 @@ void loop() {
         binLevelCan = 1;
     }
       Firebase.setFloat("Bin/can", binLevelCan);
-}
+} 
